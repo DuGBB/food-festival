@@ -14,4 +14,6 @@ module.exports = {
     }),
   ],
   mode: "development",
+  //added devtool: false to try to make the app work on GitHub pages io
+  devtool: false,
 };
