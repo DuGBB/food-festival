@@ -2,6 +2,8 @@ const path = require("path");
 const webpack = require("webpack");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const WebpackManifest = require("webpack-pwa-manifest");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const config = {
   entry: {
@@ -38,16 +40,43 @@ const config = {
       },
     ],
   },
-  mode: "development",
   plugins: [
     new webpack.ProvidePlugin({
       $: "jquery",
-      jquery: "jquery",
+      jQuery: "jquery",
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: "static", //the report outpust to an HTML file in the dist folder
     }),
+    new WebpackManifest({
+      name: "Food Event",
+      short_name: "Foodies",
+      description: "An app that allows you to view upcoming food events.",
+      start_url: "../index.html",
+      background_color: "#01579b",
+      theme_color: "#ffffff",
+      fingerprints: false,
+      inject: false,
+      icons: [
+        {
+          src: path.resolve("assets/img/icons/icon-512x512.png"),
+          sizes: [96, 128, 192, 256, 384, 512],
+          destination: path.join("assets", "icons"),
+        },
+      ],
+    }),
   ],
+  mode: "development",
+  devServer: {
+    port: 3000,
+    // writeToDisk: true,
+    proxy: {
+      "/": "http://localhost:8080",
+    },
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
+  },
 };
 
 module.exports = config;
